@@ -9,11 +9,13 @@ import java.util.List;
 public interface PostRepository {
     public List<Post> findAll();
 
-    PostDetailDto getById(int id);
+    Post getById(long id);
 
-    void save(PostDetailDto p);
+    Post save(Post p);
 
-    void delete(int id);
+    Post delete(long id);
 
-    void update(int id, PostDetailDto p);
+    Post update(long id, Post p);
+
+    List<Post> getPostsByAuthor(String author);
 }

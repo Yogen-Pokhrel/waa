@@ -1,7 +1,10 @@
 package com.waa.assignment1.posts.service;
 
+import com.waa.assignment1.posts.dto.CreatePostDto;
 import com.waa.assignment1.posts.dto.PostDetailDto;
 import com.waa.assignment1.posts.dto.PostDto;
+import com.waa.assignment1.posts.dto.UpdatePostDto;
+import com.waa.assignment1.posts.entity.Post;
 import com.waa.assignment1.posts.repository.PostRepository;
 import com.waa.helper.ListMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +27,8 @@ public class PostServiceImpl implements PostService {
     ListMapper listMapper;
 
     @Override
-    public void save(PostDetailDto p) {
-
+    public PostDetailDto save(CreatePostDto p) {
+      return modelMapper.map(postRepository.save(modelMapper.map(p, Post.class)), PostDetailDto.class);
     }
 
     @Override
@@ -34,17 +37,28 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDetailDto getById(int id) {
+    public PostDetailDto getById(long id) {
+        Post p = postRepository.getById(id);
+        if(p == null) {return null;}
+        return modelMapper.map(p, PostDetailDto.class);
+    }
+
+    @Override
+    public PostDetailDto update(long id, UpdatePostDto p) {
+        return modelMapper.map(postRepository.update(id, modelMapper.map(p, Post.class)), PostDetailDto.class);
+    }
+
+    @Override
+    public PostDto delete(long id) {
+        Post deletedPost = postRepository.delete(id);
+        if(deletedPost != null) {
+            return modelMapper.map(deletedPost, PostDto.class);
+        }
         return null;
     }
 
     @Override
-    public void update(int id, PostDetailDto p) {
-
-    }
-
-    @Override
-    public void delete(int id) {
-
+    public List<PostDto> getPostsByAuthor(String author) {
+        return (List<PostDto>) listMapper.mapList(postRepository.getPostsByAuthor(author),new PostDto());
     }
 }
