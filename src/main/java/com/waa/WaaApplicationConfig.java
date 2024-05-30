@@ -1,4 +1,4 @@
-package com.waa.assignment1.posts;
+package com.waa;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;

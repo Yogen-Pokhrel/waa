@@ -1,4 +1,4 @@
-package com.waa.assignment1.posts.dto;
+package com.waa.assignment2.posts.dto;
 
 import lombok.Data;
 
