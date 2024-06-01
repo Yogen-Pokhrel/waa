@@ -79,7 +79,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<PostDto> getPostsByFilter(String author, String title) {
+    public List<PostDto> getPostsByFilter(String author, String title) throws Exception {
+        //uncomment this to test the exception catch and record in exception table
+//        throw new Exception("Test exception");
         return (List<PostDto>) listMapper.mapList(postRepository.findPosts(author, title),new PostDto());
     }
 

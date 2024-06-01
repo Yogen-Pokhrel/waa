@@ -21,7 +21,7 @@ public interface PostService {
 
     PostDetailDto update(long id, UpdatePostDto p) throws Exception;
 
-    List<PostDto> getPostsByFilter(String author, String title);
+    List<PostDto> getPostsByFilter(String author, String title) throws Exception;
 
     List<CommentDto> getCommentsByPostId(long postId) throws Exception;
 }

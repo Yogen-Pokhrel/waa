@@ -38,9 +38,11 @@ public class PostController {
 
     /**
      * This endpoint can handle both filters, by author name and post title. This can also be further extended
+     *
+     * Throws exception and adds data to the exception table
      * */
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<PostDto>>> getPostsMadeByAuthor(@RequestParam(required = false) String author, @RequestParam(required = false) String title){
+    public ResponseEntity<ApiResponse<List<PostDto>>> getPostsMadeByAuthor(@RequestParam(required = false) String author, @RequestParam(required = false) String title) throws Exception{
         return ResponseEntity.ok(ApiResponse.success(postService.getPostsByFilter(author, title), "Post fetched successfully!"));
     }
 
