@@ -1,63 +1,28 @@
 package com.waa.aop;
-
-import com.waa.exception.ExceptionService;
-import com.waa.helper.ApiResponse;
-import com.waa.logger.service.LoggerService;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
+import com.waa.notification.NotificationCenter;
+import com.waa.students.entity.Student;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.List;
 
 @Aspect
 @Component
 public class ExecutionTimeAspect {
 
     @Autowired
-    private LoggerService loggerService;
+    NotificationCenter notificationCenter;
 
-    private static final String PRINCIPLE = "YOGEN";
-
-    @Autowired
-    private ExceptionService exceptionService;
-
-    @Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
-    public void restControllerMethods() {
+    @Pointcut("execution(org.springframework.http.ResponseEntity<com.waa.helper.ApiResponse<java.util.List<com.waa.students.entity.Student>>> *(..)) && within(com.waa.students.StudentController)")
+    public void studentControllerPointCut() {
     }
 
-    private String generateTransactionId() {
-        return UUID.randomUUID().toString();
-    }
 
-    @Around("restControllerMethods()")
-    public Object measureExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
-        String methodName = joinPoint.getSignature().toShortString();
-        LocalDateTime startTime = LocalDateTime.now();
-
-        // Log method entry
-        loggerService.logOperation(PRINCIPLE, "Entering " + methodName + " at " + startTime);
-
-        long start = System.currentTimeMillis();
-        Object proceed = null;
-        try {
-            proceed = joinPoint.proceed();
-        }catch (Exception e) {
-            exceptionService.logException(e, generateTransactionId(), PRINCIPLE, methodName, e.getMessage());
-            proceed = new ResponseEntity<>(ApiResponse.error(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-        finally {
-            long executionTime = System.currentTimeMillis() - start;
-            LocalDateTime endTime = LocalDateTime.now();
-
-            // Log method exit
-            loggerService.logOperation(PRINCIPLE, "Exiting " + methodName + " at " + endTime + ". Execution time: " + executionTime + "ms");
-        }
-        return proceed;
+    @AfterReturning(pointcut = "studentControllerPointCut()", returning = "result")
+    public void sendNotification(List<Student> result){
+        System.out.println("Sending notification when student lists are fetched");
+        notificationCenter.sendAlert( result);
     }
 }
