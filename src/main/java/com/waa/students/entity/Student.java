@@ -16,7 +16,7 @@ public class Student {
     String name;
     float gpa;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "address_id")
     private Address address;
 }

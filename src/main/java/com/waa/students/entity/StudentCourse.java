@@ -11,12 +11,12 @@ import lombok.Setter;
 @Table(name = "student_course")
 public class StudentCourse {
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "student_id")
     private Student student;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "course_id")
     private Course course;
 }
