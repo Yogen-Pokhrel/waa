@@ -10,4 +10,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE (SELECT COUNT(p) FROM Post p WHERE p.author = u) > :postCount")
     List<User> getUserWithPostsCount(int postCount);
+
+    User findByEmail(String email);
 }
